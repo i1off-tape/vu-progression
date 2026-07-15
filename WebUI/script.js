@@ -111,19 +111,12 @@
         const card = document.createElement('div');
         card.className = 'ribbon-card';
 
-        // Wrap inside a slanted layout correction wrapper
         card.innerHTML = `
-            <div class="ribbon-content-wrapper">
-                <div class="ribbon-image-container">
-                    <img class="ribbon-image" src="${imagePath}" alt="${data.name}">
-                </div>
-                <div class="ribbon-info">
-                    <div class="ribbon-status">RIBBON AWARDED</div>
-                    <div class="ribbon-title">${data.name}</div>
-                    <div class="ribbon-desc">${data.desc || ''}</div>
-                    <div class="ribbon-xp">+${data.xp} XP</div>
-                </div>
+            <div class="ribbon-title">${data.name}</div>
+            <div class="ribbon-image-container">
+                <img class="ribbon-image" src="${imagePath}" alt="${data.name}">
             </div>
+            <div class="ribbon-xp">+${data.xp}</div>
         `;
 
         container.appendChild(card);
