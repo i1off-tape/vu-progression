@@ -127,6 +127,11 @@
         // Slide in
         card.classList.add('show');
 
+        // Play sound via client Lua
+        if (typeof WebUI !== 'undefined') {
+            WebUI.Call('DispatchEventLocal', 'PlayRibbonSound');
+        }
+
         // Keep displayed for 4.5 seconds
         const displayDuration = 4500;
         const transitionDuration = 400; // time in ms for transition in CSS (0.4s)

@@ -168,7 +168,6 @@ local function AwardRibbon(playerRankObject, ribbonKey)
         local message = string.format("★ %s earned %s (+%s XP) ★", player.name, ribbon.prettyName, xpValue)
         ChatManager:Yell(message, CONFIG.UnlockNotifications.duration, player)
         ChatManager:SendMessage(message, player)
-        NetEvents:SendTo('PlayUnlockSound', player, 'ribbon')
     end
     
     NetEvents:SendTo('OnRibbonAwarded', player, ribbonKey)
@@ -309,7 +308,9 @@ local function AwardRoundEndRibbons(winningTeam)
 
     local sortedPlayers = {}
     for _, p in pairs(players) do
-        table.insert(sortedPlayers, p)
+        if currentRankupPlayers[tostring(p.guid)] then
+            table.insert(sortedPlayers, p)
+        end
     end
     table.sort(sortedPlayers, function(a, b)
         return a.score > b.score
