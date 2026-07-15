@@ -64,11 +64,11 @@ body {
 }
 
 .ribbon-image-container {
-    display: inline-flex;
+    display: flex;
     align-items: center;
     justify-content: center;
+    width: 27.7778vh; /* 300px / 1080px */
     height: 9.2593vh; /* 100px / 1080px */
-    width: auto; /* Sized dynamically to match the image width */
     margin-bottom: 0.7407vh; /* 8px / 1080px */
     position: relative;
     
@@ -101,14 +101,16 @@ body {
 
 /* Base image styling */
 .ribbon-image {
+    width: 100%;
     height: 100%;
-    width: auto;
     object-fit: contain;
     border-radius: 0.1852vh;
+    position: absolute;
+    top: 0;
+    left: 0;
 }
 
 .ribbon-image.main {
-    position: relative; /* This determines the container's width! */
     z-index: 1;
     filter: drop-shadow(0 0.3704vh 0.7407vh rgba(0, 0, 0, 0.7)) drop-shadow(0 0 0.3704vh rgba(139, 199, 226, 0.2));
 }
