@@ -166,7 +166,6 @@ local function AwardRibbon(playerRankObject, ribbonKey)
 
     if CONFIG.UnlockNotifications.enabled then
         local message = string.format("★ %s earned %s (+%s XP) ★", player.name, ribbon.prettyName, xpValue)
-        ChatManager:Yell(message, CONFIG.UnlockNotifications.duration, player)
         ChatManager:SendMessage(message, player)
     end
     
