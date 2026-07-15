@@ -114,7 +114,10 @@
         card.innerHTML = `
             <div class="ribbon-title">${data.name}</div>
             <div class="ribbon-image-container">
-                <img class="ribbon-image" src="${imagePath}" alt="${data.name}">
+                <img class="ribbon-image main" src="${imagePath}" alt="${data.name}">
+                <img class="ribbon-image glitch-cyan" src="${imagePath}" alt="${data.name}">
+                <img class="ribbon-image glitch-red" src="${imagePath}" alt="${data.name}">
+                <div class="ribbon-scanlines" style="-webkit-mask-image: url('${imagePath}'); mask-image: url('${imagePath}');"></div>
             </div>
             <div class="ribbon-xp">+${data.xp}</div>
         `;
@@ -132,11 +135,22 @@
             WebUI.Call('DispatchEventLocal', 'PlayRibbonSound');
         }
 
+        // Trigger glitch effects (RGB split, blocks, laser scan) only in the middle (from 0.5s to 2.2s)
+        let glitchStartTimeout = setTimeout(() => {
+            card.classList.add('glitch-active');
+        }, 500);
+
+        let glitchEndTimeout = setTimeout(() => {
+            card.classList.remove('glitch-active');
+        }, 2200);
+
         // Keep displayed for 4.5 seconds
         const displayDuration = 4500;
         const transitionDuration = 400; // time in ms for transition in CSS (0.4s)
 
         setTimeout(() => {
+            clearTimeout(glitchStartTimeout);
+            clearTimeout(glitchEndTimeout);
             card.classList.remove('show');
             card.classList.add('hide');
 
