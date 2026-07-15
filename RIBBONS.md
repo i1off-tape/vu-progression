@@ -1,74 +1,78 @@
-# Система нашивок (Ribbons) в моде vu-progression
+# Ribbon System (Ribbons) in vu-progression
 
-Этот документ содержит описание реализованной системы нашивок (Battlefield 3 Ribbon System) для Venice Unleashed, перечень измененных файлов и инструкции по тестированию и работе.
-
----
-
-## 📋 Описание изменений
-
-В рамках реализации было добавлено отслеживание **59 видов нашивок** на основе официального списка Battlefield 3. Игроки получают нашивки за выполнение определенных условий в течение раунда (за убийства из различных категорий оружия, использование техники, выполнение тактических действий, игру в команде и завершение матчей). Каждая нашивка дает фиксированное количество очков опыта (XP) и сопровождается звуковым эффектом и уведомлением.
+This document contains a description of the implemented Battlefield 3 Ribbon System for Venice Unleashed, list of modified/new files, and testing/usage instructions.
 
 ---
 
-## 🛠 Архитектура и файлы
+## 📋 Summary of Changes
 
-Были добавлены следующие новые файлы:
-1.  **`ext/shared/Progression/RibbonConfig.lua`**
-    *   *Назначение:* Хранит конфигурацию всех 59 нашивок: красивое имя (`prettyName`), описание (`description`), количество действий за раунд (`reqCount`) и награду в XP (`xpReward`).
-2.  **`ext/shared/Progression/WeaponCategories.lua`**
-    *   *Назначение:* Вспомогательный класс для точной классификации используемого игроками оружия по категориям (штурмовые винтовки, карабины, пулеметы, снайперские винтовки, ПП, дробовики, пистолеты, холодное оружие). Поддерживает поиск по подстроке и точные совпадения по путям игровых ресурсов BF3.
-
-Модифицированы существующие файлы:
-1.  **`ext/shared/PlayerRank.lua`**
-    *   Инициализирует список нашивок игрока (`r_RibbonList`) со счетчиками, равными 0, при создании объекта ранга.
-2.  **`ext/server/StorageManager/LocalStorage.lua`**
-    *   В базу данных SQLite добавлена новая колонка `ribbon_progression` типа `BLOB`.
-    *   Реализована автоматическая миграция (DB Patch): при первом запуске сервера база данных будет обновлена автоматически, существующие профили игроков и их уровни не сбросятся.
-    *   Сериализация списка нашивок происходит в CSV-строку и безопасно записывается в базу при выходе игрока или завершении раунда.
-3.  **`ext/server/__init__.lua`**
-    *   Отслеживает временную статистику раунда для каждого игрока (`roundStats`), сбрасывая ее при старте раунда (`Level:Loaded`).
-    *   Перехватывает событие убийства `Player:Killed`: подсчитывает убийства из определенного оружия, использование наземной/воздушной/транспортной техники, стационарных орудий, серии убийств (Combat Efficiency) и хедшоты (Accuracy).
-    *   Перехватывает событие обновления очков `Player:Score`: фильтрует SID игровых событий для автоматической выдачи нашивок поддержки (возрождение, патроны, аптечки, ремонт, захват/защита точек, обезвреживание/защита M-COM, T-UGS, помощь в подавлении, мститель/спаситель, спавн на отряде, уничтожение взрывчатки).
-    *   Перехватывает завершение раунда `Server:RoundOver` для выдачи нашивок MVP 1/2/3, Ace Squad и нашивок за завершение/победу в конкретном режиме игры.
-    *   Добавляет чат-команду `!ribbons` и сетевое событие отладки `AwardRibbonDebug`.
-4.  **`ext/shared/config.lua`**
-    *   Добавлен путь к звуковому ассету получения нашивки (`Sound/UI/Awards/UI_Award_Ribbon`).
-5.  **`ext/client/__init__.lua`**
-    *   Клиентская часть теперь прослушивает сетевое событие `OnRibbonAwarded` и регистрирует консольную команду разработчика `AwardRibbonDebug` для ручного тестирования.
+A tracking system for **59 types of ribbons** has been implemented based on the official Battlefield 3 list. Players earn ribbons for achieving specific conditions during a round (kills with different weapon categories, vehicle usage, tactical support actions, teamplay, and match completion). Each ribbon awards a fixed amount of experience points (XP), plays the original unlock sound, and displays a beautiful centered top-HUD WebUI notification.
 
 ---
 
-## 🕹 Как это работает (Игровой процесс)
+## 🛠 Architecture and Files
 
-### 1. Получение нашивок во время игры
-Как только игрок совершает необходимое число действий за раунд (например, совершает 7 убийств из штурмовой винтовки):
-*   На сервере срабатывает функция `AwardRibbon(playerRank, ribbonKey)`.
-*   Игроку начисляются очки опыта в глобальный уровень (значение масштабируется в соответствии с `xpMultiplier` сервера).
-*   На экран игрока выводится текстовое Yell-уведомление: `★ [Имя] earned Assault Rifle Ribbon (+200 XP) ★`.
-*   Сообщение также дублируется в чат.
-*   У игрока на клиенте проигрывается оригинальный звук получения нашивки.
-*   Игрок может заработать одну и ту же нашивку **несколько раз за один раунд** (например, 14 убийств из штурмовой винтовки дадут 2 нашивки).
+The following new files were added:
+1. **`ext/shared/Progression/RibbonConfig.lua`**
+   * *Purpose:* Stores configuration for all 59 ribbons: pretty name (`prettyName`), description (`description`), action count per round (`reqCount`), and XP reward (`xpReward`).
+2. **`ext/shared/Progression/WeaponCategories.lua`**
+   * *Purpose:* Helper class to map weapon assets to categories (Assault Rifles, Carbines, LMGs, Sniper Rifles, PDWs, Shotguns, Handguns, Melee). Supports exact matches and pattern/substring lookups.
+3. **`WebUI/` folder**
+   * *Purpose:* Custom HUD overlay using HTML/CSS/JS. Renders original-style transparent HUD popup at the top-center of the screen.
+   * *`test.html`:* Helper developer tool to test animations directly in any web browser without running the game.
 
-### 2. Подведение итогов в конце раунда
-В момент окончания матча сервер анализирует итоговые очки игроков:
-*   Определяются три лучших игрока раунда и награждаются нашивками **MVP**, **MVP 2** и **MVP 3**.
-*   Подсчитывается суммарный счет каждого отряда. Все игроки отряда с наибольшим счетом получают нашивку лучшего отряда (**Ace Squad**).
-*   Все игроки получают нашивку за завершение матча в данном режиме (например, **Conquest Ribbon**).
-*   Игроки победившей команды получают нашивку за победу (например, **Conquest Winner Ribbon**).
+Modified existing files:
+1. **`ext/shared/PlayerRank.lua`**
+   * Initializes player ribbon list counters (`r_RibbonList`) to 0 when the player rank object is initialized.
+2. **`ext/server/StorageManager/LocalStorage.lua`**
+   * Added `ribbon_progression` blob column to local SQLite database with automatic migration patch (DB version bump, no profile reset).
+   * Ribbon count data is serialized as a CSV string and saved when players disconnect or round completes.
+3. **`ext/server/__init__.lua`**
+   * Tracks round-based stats for each player (`roundStats`), resetting them at the start of each round (`Level:Loaded`).
+   * Hooks `Player:Killed` event to track weapon class kills, vehicle types (air, land, transport, stationary), headshots (Accuracy), and kill streaks (Combat Efficiency).
+   * Hooks `Player:Score` event to capture and filter VEXT score events for support awards (revives, repairs, resupplies, heals, flag capture/defend, MCOM destroy/defend, motion sensor assists, suppression assists, avengers, saviors, spawn on squad, destroy explosives).
+   * Hooks `Server:RoundOver` event to award end-round ribbons: MVP (1st, 2nd, 3rd), Ace Squad (best squad overall by combined score), and game mode completion/win awards.
+   * Handles chat command `!ribbons` and debug network event `AwardRibbonDebug`.
+4. **`ext/shared/config.lua`**
+   * Configured award unlock sound path (`"Sound/UI/Awards/UI_Award_Unlock"`).
+   * Added `HasWebUI: true` to `mod.json`.
+5. **`ext/client/__init__.lua`**
+   * Handles WebUI initialization (`WebUI:Init()`) on `Extension:Loaded`.
+   * Listens to the network event `OnRibbonAwarded`, encodes ribbon data to JSON, and calls the WebUI Javascript interface (`window.showRibbon`) to trigger HUD animations.
 
 ---
 
-## ⌨️ Доступные команды
+## 🕹 How it Works (Gameplay)
 
-### В чате (доступно всем игрокам):
-*   **`!ribbons`** — Выводит в чат список всех заработанных игроком нашивок и их общее количество (накопленное за все время игры и сохраненное в базе данных).
+### 1. Earning Ribbons In-Game
+Once a player meets a ribbon's requirement during a round (e.g., gets 7 kills with an Assault Rifle):
+* The server calls `AwardRibbon(playerRank, ribbonKey)`.
+* The player is awarded global XP (multiplied by the server's `xpMultiplier`).
+* A message is sent to the chat: `★ [Player] earned Assault Rifle Ribbon (+200 XP) ★`.
+* A yell notification appears: `★ [Player] earned Assault Rifle Ribbon (+200 XP) ★`.
+* The client plays the original award unlock sound.
+* The top-center WebUI HUD displays a clean transparent notification containing the ribbon name, horizontal ribbon icon, and XP points.
+* Ribbons can be earned **multiple times per round** (e.g., 14 Assault Rifle kills will award 2 ribbons).
 
-### В консоли игры `~` (доступно при включенном режиме отладки `CONFIG.General.debug = true`):
-*   **`AwardRibbonDebug <RibbonKey>`** — Мгновенно выдает указанную нашивку самому себе для проверки оповещений, звука и начисления опыта. Пример: `AwardRibbonDebug CombatEfficiency`.
+### 2. End-Round Summary
+When a round completes, the server calculates:
+* Top 3 players by score and awards them **MVP**, **MVP 2**, and **MVP 3** ribbons.
+* Combined scores of all active squads. All players in the highest-scoring squad receive the **Ace Squad** ribbon.
+* Game mode participation (e.g., **Conquest Ribbon**) for all players.
+* Game mode victory (e.g., **Conquest Winner Ribbon**) for players in the winning team.
 
 ---
 
-## 💾 Сохранение данных
-Накопленные нашивки записываются в локальную SQLite базу данных в колонку `ribbon_progression`.
-Глобальное сетевое хранилище (`NetStorage.lua`) не затрагивается, что гарантирует совместимость с официальными API-серверами без каких-либо ошибок.
-При перезапуске раунда или выходе игрока данные сохраняются автоматически.
+## ⌨️ Available Commands
+
+### Chat Commands (available to everyone):
+* **`!ribbons`** — Prints a list of all your earned ribbons and their total counts (accumulated and saved in the database).
+
+### Console Commands `~` (only when `CONFIG.General.debug = true` in config.lua):
+* **`AwardRibbonDebug <RibbonKey>`** — Instantly awards the specified ribbon to yourself to test sound, chat, and WebUI HUD notification. Example: `AwardRibbonDebug CombatEfficiency`.
+* **`PlayUnlockSound ribbon`** — Plays the ribbon unlock sound.
+
+---
+
+## 💾 Storage & Networking
+All progress is saved in SQLite database (`ribbon_progression`). Global API networking (`NetStorage.lua`) is untouched, guaranteeing backward compatibility. Data is saved automatically on map reload or disconnect.

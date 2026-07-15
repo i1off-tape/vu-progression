@@ -58,7 +58,7 @@ body {
 }
 
 .ribbon-title {
-    font-size: 24px;
+    font-size: 30px;
     font-weight: 700;
     color: #8bc7e2; /* Light blue BF3 HUD color */
     text-shadow: 0 0 12px rgba(139, 199, 226, 0.6), 0 2px 4px rgba(0, 0, 0, 0.85);
@@ -72,8 +72,8 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 240px; /* Wider container to prevent squashing horizontal ribbons */
-    height: 80px;
+    width: 300px; /* Wider container to prevent squashing horizontal ribbons */
+    height: 100px;
     margin-bottom: 8px;
     position: relative;
 }
@@ -82,8 +82,8 @@ body {
 .ribbon-image-container::before {
     content: '';
     position: absolute;
-    width: 160px;
-    height: 60px;
+    width: 200px;
+    height: 75px;
     background: radial-gradient(ellipse, rgba(139, 199, 226, 0.15) 0%, rgba(139, 199, 226, 0) 70%);
     top: 50%;
     left: 50%;
@@ -100,7 +100,7 @@ body {
 }
 
 .ribbon-xp {
-    font-size: 20px;
+    font-size: 25px;
     font-weight: 700;
     color: #ffffff;
     text-shadow: 0 0 8px rgba(255, 255, 255, 0.4), 0 2px 4px rgba(0, 0, 0, 0.9);
