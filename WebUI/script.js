@@ -1,0 +1,179 @@
+/**
+ * VU Progression - Ribbon Notification System
+ * Handles queueing and displaying ribbon animations on the client HUD.
+ */
+
+(function() {
+    // Map Lua Ribbon Config keys to their respective PNG files in WebUI/images/
+    const ribbonImageMap = {
+        // Combat / Action Ribbons
+        'AssaultRifle': 'Assault_Rifle_Ribbon.png',
+        'LMG': 'Light_Machine_Gun_Ribbon.png',
+        'Carbine': 'Carbine_Ribbon.png',
+        'Handgun': 'Handgun_Ribbon.png',
+        'SniperRifle': 'Sniper_Rifle_Ribbon.png',
+        'PDW': 'PDW_Ribbon.png',
+        'Shotgun': 'Shotgun_Ribbon.png',
+        'DisableVehicle': 'Disable_Vehicle_Ribbon.png',
+        'Melee': 'Melee_Ribbon.png',
+        'Resupply': 'Resupply_Efficiency_Ribbon.png',
+        'Surveillance': 'Surveillance_Efficiency_Ribbon.png',
+        'Medical': 'Medical_Efficiency_Ribbon.png',
+        'FlagDefender': 'Flag_Defender_Ribbon.png',
+        'FlagAttacker': 'Flag_Attacker_Ribbon.png',
+        'McomDefender': 'M-COM_Defender_Ribbon.png',
+        'McomAttacker': 'M-COM_Attacker_Ribbon.png',
+        'AirWarfare': 'Air_Warfare_Ribbon.png',
+        'Stationary': 'Stationary_Emplacement_Ribbon.png',
+        'ArmoredWarfare': 'Armored_Warfare_Ribbon.png',
+        'TransportWarfare': 'Transport_Warfare_Ribbon.png',
+        'SquadWipe': 'Squad_Wipe_Ribbon.png',
+        'SquadSpawn': 'Squad_Spawn_Ribbon.png',
+        'AntiExplosives': 'Anti_Explosives_Ribbon.png',
+        'CombatEfficiency': 'Combat_Efficiency_Ribbon.png',
+        'MVP': 'MVP_Ribbon.png',
+        'MVP2': 'MVP_2_Ribbon.png',
+        'MVP3': 'MVP_3_Ribbon.png',
+        'Nemesis': 'Nemesis_Ribbon.png',
+        'Suppression': 'Suppression_Ribbon.png',
+        'Avenger': 'Avenger_Ribbon.png',
+        'Savior': 'Savior_Ribbon.png',
+        'AntiVehicle': 'Anti_Vehicle_Ribbon.png',
+        'Accuracy': 'Accuracy_Ribbon.png',
+        'Maintenance': 'Maintainence_Efficiency_Ribbon.png', // Special mapping spelling case
+        'AceSquad': 'Ace_Squad_Ribbon.png',
+        
+        // Round Completion Ribbons
+        'SquadRush': 'Squad_Rush_Ribbon.png',
+        'SquadDeathmatch': 'Squad_Deathmatch_Ribbon.png',
+        'Rush': 'Rush_Ribbon.png',
+        'Conquest': 'Conquest_Ribbon.png',
+        'TeamDeathmatch': 'Team_Deathmatch_Ribbon.png',
+        'TDMCQ': 'Tdmcq-round-ribbon.png',
+        'TankSuperiority': 'Tanksuperiorityribbon.png',
+        'Scavenger': 'Scavenger_ribbon.png',
+        'Domination': 'Conquest_dominationribbon.png',
+        'GunMaster': 'Gmribbon.png',
+        'CaptureTheFlag': 'BF3_Capture_the_Flag_Ribbon.png',
+        'AirSuperiority': 'BF3_Air_Superiority_Ribbon.png',
+
+        // Round Winner Ribbons
+        'RushWinner': 'Rush_Winner_Ribbon.png',
+        'ConquestWinner': 'Conquest_Winner_Ribbon.png',
+        'TDMWinner': 'TDM_Winner.png',
+        'SquadRushWinner': 'Squad_Rush_Winner.png',
+        'SquadDeathmatchWinner': 'Squad_Deathmatch_Winner.png',
+        'TDMCQWinner': 'Tdmcq-winner-ribbon.png',
+        'TankSuperiorityWinner': 'Tanksuperiority2d.png',
+        'ScavengerWinner': 'Scavengerribbon.png',
+        'DominationWinner': 'Conquest_domination2d.png',
+        'GunMasterWinner': 'Gunmaster2d.png',
+        'CaptureTheFlagWinner': 'BF3_Capture_the_Flag_Winner_Ribbon.png',
+        'AirSuperiorityWinner': 'BF3_Air_Superiority_Winner_Ribbon.png',
+    };
+
+    const ribbonQueue = [];
+    let isDisplaying = false;
+
+    // Expose showRibbon to global window object for Venice Unleashed VEXT Lua to call
+    window.showRibbon = function(data) {
+        if (!data || !data.key) {
+            console.warn("[WebUI] Received invalid ribbon data:", data);
+            return;
+        }
+        ribbonQueue.push(data);
+        processQueue();
+    };
+
+    function processQueue() {
+        if (isDisplaying || ribbonQueue.length === 0) {
+            return;
+        }
+
+        isDisplaying = true;
+        const currentRibbon = ribbonQueue.shift();
+        displayRibbon(currentRibbon);
+    }
+
+    function displayRibbon(data) {
+        const container = document.getElementById('ribbon-container');
+        if (!container) {
+            console.error("[WebUI] Ribbon container element not found!");
+            isDisplaying = false;
+            return;
+        }
+
+        // Map key to the correct image file
+        const imageName = ribbonImageMap[data.key] || 'MVP_Ribbon.png';
+        const imagePath = `images/${imageName}`;
+
+        // Create the card element
+        const card = document.createElement('div');
+        card.className = 'ribbon-card';
+
+        // Wrap inside a slanted layout correction wrapper
+        card.innerHTML = `
+            <div class="ribbon-content-wrapper">
+                <div class="ribbon-image-container">
+                    <img class="ribbon-image" src="${imagePath}" alt="${data.name}">
+                </div>
+                <div class="ribbon-info">
+                    <div class="ribbon-status">RIBBON AWARDED</div>
+                    <div class="ribbon-title">${data.name}</div>
+                    <div class="ribbon-desc">${data.desc || ''}</div>
+                    <div class="ribbon-xp">+${data.xp} XP</div>
+                </div>
+            </div>
+        `;
+
+        container.appendChild(card);
+
+        // Force a layout reflow so transitions trigger correctly
+        void card.offsetWidth;
+
+        // Slide in
+        card.classList.add('show');
+
+        // Keep displayed for 4.5 seconds
+        const displayDuration = 4500;
+        const transitionDuration = 400; // time in ms for transition in CSS (0.4s)
+
+        setTimeout(() => {
+            card.classList.remove('show');
+            card.classList.add('hide');
+
+            // Set up listener to remove element after fade-out transition completes
+            let transitionEnded = false;
+            
+            const handleTransitionEnd = (event) => {
+                // Ensure we handle transitions on opacity or transform
+                if (event.propertyName === 'opacity' || event.propertyName === 'transform') {
+                    if (transitionEnded) return;
+                    transitionEnded = true;
+                    
+                    card.removeEventListener('transitionend', handleTransitionEnd);
+                    card.remove();
+                    
+                    isDisplaying = false;
+                    // Introduce a tiny delay between consecutive ribbons
+                    setTimeout(processQueue, 150);
+                }
+            };
+
+            card.addEventListener('transitionend', handleTransitionEnd);
+
+            // Safety fallback in case transitionend event doesn't fire (e.g. blurred window)
+            setTimeout(() => {
+                if (!transitionEnded) {
+                    transitionEnded = true;
+                    if (card.parentNode) {
+                        card.remove();
+                    }
+                    isDisplaying = false;
+                    setTimeout(processQueue, 150);
+                }
+            }, transitionDuration + 200);
+
+        }, displayDuration);
+    }
+})();

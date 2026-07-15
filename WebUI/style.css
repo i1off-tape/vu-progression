@@ -1,0 +1,164 @@
+@import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&display=swap');
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    width: 100vw;
+    height: 100vh;
+    background: transparent;
+    overflow: hidden;
+    font-family: 'Rajdhani', sans-serif;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+#ribbon-container {
+    position: fixed;
+    bottom: 15%;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+    pointer-events: none;
+}
+
+.ribbon-card {
+    display: flex;
+    align-items: center;
+    width: 440px;
+    background: linear-gradient(135deg, rgba(10, 20, 28, 0.93) 0%, rgba(5, 12, 18, 0.88) 100%);
+    border: 1px solid rgba(0, 210, 255, 0.25);
+    border-left: 5px solid #00d2ff;
+    box-shadow: 0 0 25px rgba(0, 210, 255, 0.35), 
+                inset 0 0 15px rgba(0, 210, 255, 0.15);
+    padding: 15px 22px;
+    border-radius: 2px;
+    
+    /* BF3 Slanted HUD Effect */
+    transform: skewX(-10deg) translateY(50px) scale(0.9);
+    opacity: 0;
+    
+    transition: opacity 0.5s cubic-bezier(0.19, 1, 0.22, 1), 
+                transform 0.5s cubic-bezier(0.19, 1, 0.22, 1);
+    
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    margin-top: 10px;
+}
+
+.ribbon-card.show {
+    opacity: 1;
+    transform: skewX(-10deg) translateY(0) scale(1);
+}
+
+.ribbon-card.hide {
+    opacity: 0;
+    transform: skewX(-10deg) translateY(-30px) scale(0.95);
+    transition: opacity 0.4s cubic-bezier(0.19, 1, 0.22, 1), 
+                transform 0.4s cubic-bezier(0.19, 1, 0.22, 1);
+}
+
+/* Reverse skew for contents to keep images & text upright */
+.ribbon-content-wrapper {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    transform: skewX(10deg);
+}
+
+.ribbon-image-container {
+    flex-shrink: 0;
+    margin-right: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    width: 72px;
+    height: 72px;
+}
+
+/* Tactical circular glow behind ribbon */
+.ribbon-image-container::before {
+    content: '';
+    position: absolute;
+    width: 80px;
+    height: 80px;
+    background: radial-gradient(circle, rgba(0, 210, 255, 0.22) 0%, rgba(0, 210, 255, 0) 70%);
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1;
+}
+
+.ribbon-image {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    z-index: 2;
+    filter: drop-shadow(0 0 10px rgba(0, 210, 255, 0.4));
+    animation: ribbon-pulse 3s infinite ease-in-out;
+}
+
+.ribbon-info {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    flex-grow: 1;
+}
+
+.ribbon-status {
+    font-size: 12px;
+    font-weight: 700;
+    color: #ff9f00; /* BF3 Orange/Yellow */
+    text-shadow: 0 0 10px rgba(255, 159, 0, 0.5);
+    letter-spacing: 2.5px;
+    margin-bottom: 2px;
+    text-transform: uppercase;
+}
+
+.ribbon-title {
+    font-size: 22px;
+    font-weight: 700;
+    color: #ffffff;
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+    letter-spacing: 0.5px;
+    line-height: 1.1;
+    margin-bottom: 3px;
+    text-transform: uppercase;
+}
+
+.ribbon-desc {
+    font-size: 11px;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.6);
+    margin-bottom: 5px;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+}
+
+.ribbon-xp {
+    font-size: 15px;
+    font-weight: 700;
+    color: #00d2ff; /* BF3 Neon Blue */
+    text-shadow: 0 0 8px rgba(0, 210, 255, 0.6);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+@keyframes ribbon-pulse {
+    0%, 100% {
+        filter: drop-shadow(0 0 8px rgba(0, 210, 255, 0.45)) brightness(1);
+    }
+    50% {
+        filter: drop-shadow(0 0 16px rgba(0, 210, 255, 0.75)) brightness(1.1);
+    }
+}
