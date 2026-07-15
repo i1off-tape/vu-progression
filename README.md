@@ -67,6 +67,7 @@ These should be considered temporary until a proper UI can be built to view thes
 - `!level` or `!score`: Privately prints to the player all Class & General levels, score, and score required for next unlock.
 - `!kills <Weapon Name>`: Prints number of kills for that weapon, kills required for next unlock, and what that unlock will be.
 - `!vs <Vehicle Type>`: Does the same, but for Vehicle Score.
+- `!ribbons`: Privately prints a list of all your earned ribbons and their total counts.
 
 ## 🎮 Usage
 - Join a server with a `progression` mod tag
