@@ -6,7 +6,7 @@ This document contains a description of the implemented Battlefield 3 Ribbon Sys
 
 ## 📋 Summary of Changes
 
-A tracking system for **59 types of ribbons** has been implemented based on the official Battlefield 3 list. Players earn ribbons for achieving specific conditions during a round (kills with different weapon categories, vehicle usage, tactical support actions, teamplay, and match completion). Each ribbon awards a fixed amount of experience points (XP), plays the original unlock sound, and displays a beautiful centered top-HUD WebUI notification.
+A tracking system for **59 types of ribbons** has been implemented based on the official Battlefield 3 list. Players earn ribbons for achieving specific conditions during a round (kills with different weapon categories, vehicle usage, tactical support actions, teamplay, and match completion). Each ribbon awards a fixed amount of experience points (XP), displays a beautiful centered top-HUD WebUI notification with a premium holographic/glitch pop-up effect, and plays the original unlock sound synchronized exactly with the animation.
 
 ---
 
@@ -18,8 +18,8 @@ The following new files were added:
 2. **`ext/shared/Progression/WeaponCategories.lua`**
    * *Purpose:* Helper class to map weapon assets to categories (Assault Rifles, Carbines, LMGs, Sniper Rifles, PDWs, Shotguns, Handguns, Melee). Supports exact matches and pattern/substring lookups.
 3. **`WebUI/` folder**
-   * *Purpose:* Custom HUD overlay using HTML/CSS/JS. Renders original-style transparent HUD popup at the top-center of the screen.
-   * *`test.html`:* Helper developer tool to test animations directly in any web browser without running the game.
+   * *Purpose:* Custom HUD overlay using HTML/CSS/JS. Renders original-style transparent HUD popup at the top-center of the screen with smooth scaling pop-out transitions, black CRT scanline grids, moving laser sweeps, and RGB color-splitting glitches (chromatic aberration).
+   * *`test.html`:* Helper developer tool to test animations and visual effects directly in any web browser without running the game.
 
 Modified existing files:
 1. **`ext/shared/PlayerRank.lua`**
@@ -38,7 +38,9 @@ Modified existing files:
    * Added `HasWebUI: true` to `mod.json`.
 5. **`ext/client/__init__.lua`**
    * Handles WebUI initialization (`WebUI:Init()`) on `Extension:Loaded`.
-   * Listens to the network event `OnRibbonAwarded`, encodes ribbon data to JSON, and calls the WebUI Javascript interface (`window.showRibbon`) to trigger HUD animations.
+   * Listens to the network event `OnRibbonAwarded` (if `CONFIG.UnlockNotifications.enabled` is active), encodes ribbon data to JSON, and calls the WebUI Javascript interface (`window.showRibbon`) to trigger HUD animations.
+6. **`ext/client/SoundManager.lua`**
+   * Subscribes to local client event `PlayRibbonSound` to play the award unlock sound natively on demand.
 
 ---
 
@@ -50,8 +52,8 @@ Once a player meets a ribbon's requirement during a round (e.g., gets 7 kills wi
 * The player is awarded global XP (multiplied by the server's `xpMultiplier`).
 * A message is sent to the chat: `★ [Player] earned Assault Rifle Ribbon (+200 XP) ★`.
 * A yell notification appears: `★ [Player] earned Assault Rifle Ribbon (+200 XP) ★`.
-* The client plays the original award unlock sound.
-* The top-center WebUI HUD displays a clean transparent notification containing the ribbon name, horizontal ribbon icon, and XP points.
+* The top-center WebUI HUD displays a transparent holographic notification containing the ribbon name, horizontal ribbon icon, and XP points.
+* The client plays the original award unlock sound at the exact millisecond the ribbon pops up. For multiple ribbons awarded in a row, the sound triggers sequentially as each ribbon animates onto the screen, preventing overlapping or skipped audio.
 * Ribbons can be earned **multiple times per round** (e.g., 14 Assault Rifle kills will award 2 ribbons).
 
 ### 2. End-Round Summary

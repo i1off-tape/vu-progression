@@ -16,7 +16,7 @@ This mod is still in early development, so some key features are still missing.
 
 ## ✨ Features
 - Rank progression system
-- Ribbon progression system (59 ribbons from BF3 with authentic top-HUD WebUI notifications & sounds)
+- Ribbon progression system (59 ribbons from BF3 with premium holographic/glitch top-HUD WebUI notifications & sequential sounds)
 - Weapon unlocks based on score
 - Attachment unlocks per weapon based on kills
 - Vehicle unlock progression
@@ -88,7 +88,7 @@ The mod is written in [VEXT (VeniceEXT)](https://docs.veniceunleashed.net/vext/)
 
 ## 🚧 Roadmap
 - [x] Global persistent tracking across multiple servers
-- [x] Add Ribbons (with original BF3 WebUI HUD popups & sounds)
+- [x] Add Ribbons (with original BF3 WebUI HUD popups, premium holographic/glitch visual effects & sequential sounds)
 - [ ] Add Assignments
 - [ ] Add dog tag unlocks
 - [ ] UI stats page 
