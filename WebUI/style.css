@@ -20,7 +20,7 @@ body {
 
 #ribbon-container {
     position: fixed;
-    top: 10%; /* Center at the top of the screen */
+    top: 10vh; /* Centered top position (108px at 1080p) */
     left: 50%;
     transform: translateX(-50%);
     z-index: 9999;
@@ -58,13 +58,13 @@ body {
 }
 
 .ribbon-title {
-    font-size: 30px;
+    font-size: 2.7778vh; /* 30px / 1080px */
     font-weight: 700;
     color: #8bc7e2; /* Light blue BF3 HUD color */
-    text-shadow: 0 0 12px rgba(139, 199, 226, 0.6), 0 2px 4px rgba(0, 0, 0, 0.85);
-    letter-spacing: 2px;
+    text-shadow: 0 0 1.1111vh rgba(139, 199, 226, 0.6), 0 0.1852vh 0.3704vh rgba(0, 0, 0, 0.85);
+    letter-spacing: 0.1852vh; /* 2px / 1080px */
     text-transform: uppercase;
-    margin-bottom: 8px;
+    margin-bottom: 0.7407vh; /* 8px / 1080px */
     text-align: center;
 }
 
@@ -72,9 +72,9 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 300px; /* Wider container to prevent squashing horizontal ribbons */
-    height: 100px;
-    margin-bottom: 8px;
+    width: 27.7778vh; /* 300px / 1080px */
+    height: 9.2593vh; /* 100px / 1080px */
+    margin-bottom: 0.7407vh; /* 8px / 1080px */
     position: relative;
 }
 
@@ -82,8 +82,8 @@ body {
 .ribbon-image-container::before {
     content: '';
     position: absolute;
-    width: 200px;
-    height: 75px;
+    width: 18.5185vh; /* 200px / 1080px */
+    height: 6.9444vh; /* 75px / 1080px */
     background: radial-gradient(ellipse, rgba(139, 199, 226, 0.15) 0%, rgba(139, 199, 226, 0) 70%);
     top: 50%;
     left: 50%;
@@ -96,14 +96,14 @@ body {
     max-height: 100%;
     object-fit: contain;
     z-index: 2;
-    filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.7)) drop-shadow(0 0 4px rgba(139, 199, 226, 0.2));
+    filter: drop-shadow(0 0.3704vh 0.7407vh rgba(0, 0, 0, 0.7)) drop-shadow(0 0 0.3704vh rgba(139, 199, 226, 0.2));
 }
 
 .ribbon-xp {
-    font-size: 25px;
+    font-size: 2.3148vh; /* 25px / 1080px */
     font-weight: 700;
     color: #ffffff;
-    text-shadow: 0 0 8px rgba(255, 255, 255, 0.4), 0 2px 4px rgba(0, 0, 0, 0.9);
-    letter-spacing: 1px;
+    text-shadow: 0 0 0.7407vh rgba(255, 255, 255, 0.4), 0 0.1852vh 0.3704vh rgba(0, 0, 0, 0.9);
+    letter-spacing: 0.0926vh; /* 1px / 1080px */
     text-align: center;
 }
