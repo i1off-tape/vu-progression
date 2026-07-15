@@ -111,6 +111,10 @@ NetEvents:Subscribe('OnVehicleCustUnlock', function(typeName, score)
     UnlockClientVehicleCust(typeName, score)
 end)
 
+NetEvents:Subscribe('OnRibbonAwarded', function(ribbonKey)
+    print("Client received Ribbon Awarded: " .. ribbonKey)
+end)
+
 -- DEBUG
 if CONFIG.General.debug then
 
@@ -128,6 +132,13 @@ if CONFIG.General.debug then
         if #args == 2 then
             NetEvents:SendLocal('AddKillsToWeap', args[1], args[2])
             print("Added " .. args[1] .. " kills to " .. args[2] .. " for self")
+        end
+    end)
+
+    Console:Register('AwardRibbonDebug', 'DEBUG: Awards a ribbon by ribbonKey[1] to self', function(args)
+        if #args == 1 then
+            NetEvents:SendLocal('AwardRibbonDebug', args[1])
+            print("Requesting ribbon " .. args[1] .. " award")
         end
     end)
 
