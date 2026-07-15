@@ -358,14 +358,12 @@ local function AwardRoundEndRibbons(winningTeam)
     local winnerKey = nil
     
     local lowerMode = string.lower(currentGameMode or "")
-    if string.find(lowerMode, "conquest") then
-        if string.find(lowerMode, "domination") then
-            modeKey = "Domination"
-            winnerKey = "DominationWinner"
-        else
-            modeKey = "Conquest"
-            winnerKey = "ConquestWinner"
-        end
+    if string.find(lowerMode, "domination") then
+        modeKey = "Domination"
+        winnerKey = "DominationWinner"
+    elseif string.find(lowerMode, "conquest") then
+        modeKey = "Conquest"
+        winnerKey = "ConquestWinner"
     elseif string.find(lowerMode, "rush") then
         if string.find(lowerMode, "squad") then
             modeKey = "SquadRush"
@@ -928,14 +926,6 @@ if CONFIG.General.debug then
 
     NetEvents:Subscribe('AddKillsToWeap', function(player, kills, weapPath)
         IncreaseWeaponKills(player, weapPath, kills)
-    end)
-    
-    NetEvents:Subscribe('AwardRibbonDebug', function(player, ribbonKey)
-        local guid = tostring(player.guid)
-        local cPlayer = currentRankupPlayers[guid]
-        if cPlayer then
-            AwardRibbon(cPlayer, ribbonKey)
-        end
     end)
     
 end

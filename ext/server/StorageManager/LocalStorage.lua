@@ -50,19 +50,31 @@ function LocalStorage:_initDB()
 end
 
 function LocalStorage:_patchDB()
-    local response = SQL:Query('SELECT * FROM player_rankings_table LIMIT 1')
-    if response == nil or #response ~= 1 or response[1] == nil then return end
-    
-    -- Add vehicle_progression if missing
-    if response[1]['vehicle_progression'] == nil then
+    local columns = SQL:Query('PRAGMA table_info(player_rankings_table)')
+    if columns == nil then
+        print('Failed to query table info: ' .. SQL:Error())
+        return
+    end
+
+    local hasVehicleProgression = false
+    local hasRibbonProgression = false
+
+    for _, col in pairs(columns) do
+        if col.name == 'vehicle_progression' then
+            hasVehicleProgression = true
+        elseif col.name == 'ribbon_progression' then
+            hasRibbonProgression = true
+        end
+    end
+
+    if not hasVehicleProgression then
         print("Missing 'vehicle_progression' column detected. Patching DB to include it...")
         if not SQL:Query('ALTER TABLE player_rankings_table ADD COLUMN vehicle_progression BLOB') then
             print('Failed to execute query: ' .. SQL:Error())
         end
     end
 
-    -- Add ribbon_progression if missing
-    if response[1]['ribbon_progression'] == nil then
+    if not hasRibbonProgression then
         print("Missing 'ribbon_progression' column detected. Patching DB to include it...")
         if not SQL:Query('ALTER TABLE player_rankings_table ADD COLUMN ribbon_progression BLOB') then
             print('Failed to execute query: ' .. SQL:Error())

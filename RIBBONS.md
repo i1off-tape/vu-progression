@@ -6,7 +6,7 @@ This document contains a description of the implemented Battlefield 3 Ribbon Sys
 
 ## 📋 Summary of Changes
 
-A tracking system for **59 types of ribbons** has been implemented based on the official Battlefield 3 list. Players earn ribbons for achieving specific conditions during a round (kills with different weapon categories, vehicle usage, tactical support actions, teamplay, and match completion). Each ribbon awards a fixed amount of experience points (XP), displays a beautiful centered top-HUD WebUI notification with a premium holographic/glitch pop-up effect, and plays the original unlock sound synchronized exactly with the animation.
+A tracking system for **59 types of ribbons** has been implemented based on the official Battlefield 3 list. Players earn ribbons for achieving specific conditions during a round (kills with different weapon categories, vehicle usage, tactical support actions, teamplay, and match completion). Each ribbon has a configured base XP reward, which may be modified by the server's XP multiplier, displays a beautiful centered top-HUD WebUI notification with a premium holographic/glitch pop-up effect, and plays the original unlock sound synchronized exactly with the animation.
 
 ---
 
@@ -25,18 +25,19 @@ Modified existing files:
 1. **`ext/shared/PlayerRank.lua`**
    * Initializes player ribbon list counters (`r_RibbonList`) to 0 when the player rank object is initialized.
 2. **`ext/server/StorageManager/LocalStorage.lua`**
-   * Added `ribbon_progression` blob column to local SQLite database with automatic migration patch (DB version bump, no profile reset).
+   * Added `ribbon_progression` blob column to local SQLite database with automatic schema patch checking (`PRAGMA table_info` columns lookup to run `ALTER TABLE` only if column is missing, ensuring no profile reset).
    * Ribbon count data is serialized as a CSV string and saved when players disconnect or round completes.
 3. **`ext/server/__init__.lua`**
    * Tracks round-based stats for each player (`roundStats`), resetting them at the start of each round (`Level:Loaded`).
    * Hooks `Player:Killed` event to track weapon class kills, vehicle types (air, land, transport, stationary), headshots (Accuracy), and kill streaks (Combat Efficiency).
    * Hooks `Player:Score` event to capture and filter VEXT score events for support awards (revives, repairs, resupplies, heals, flag capture/defend, MCOM destroy/defend, motion sensor assists, suppression assists, avengers, saviors, spawn on squad, destroy explosives).
    * Hooks `Server:RoundOver` event to award end-round ribbons: MVP (1st, 2nd, 3rd), Ace Squad (best squad overall by combined score), and game mode completion/win awards.
-   * Handles chat command `!ribbons` and debug network event `AwardRibbonDebug`.
+   * Handles chat command `!ribbons`.
 4. **`ext/shared/config.lua`**
    * Configured award unlock sound path (`"Sound/UI/Awards/UI_Award_Unlock"`).
-   * Added `HasWebUI: true` to `mod.json`.
-5. **`ext/client/__init__.lua`**
+5. **`mod.json`**
+   * Enabled WebUI support with `"HasWebUI": true`.
+6. **`ext/client/__init__.lua`**
    * Handles WebUI initialization (`WebUI:Init()`) on `Extension:Loaded`.
    * Listens to the network event `OnRibbonAwarded` (if `CONFIG.UnlockNotifications.enabled` is active), encodes ribbon data to JSON, and calls the WebUI Javascript interface (`window.showRibbon`) to trigger HUD animations.
 6. **`ext/client/SoundManager.lua`**
@@ -71,7 +72,6 @@ When a round completes, the server calculates:
 * **`!ribbons`** — Prints a list of all your earned ribbons and their total counts (accumulated and saved in the database).
 
 ### Console Commands `~` (only when `CONFIG.General.debug = true` in config.lua):
-* **`AwardRibbonDebug <RibbonKey>`** — Instantly awards the specified ribbon to yourself to test sound, chat, and WebUI HUD notification. Example: `AwardRibbonDebug CombatEfficiency`.
 * **`PlayUnlockSound ribbon`** — Plays the ribbon unlock sound.
 
 ---

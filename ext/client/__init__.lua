@@ -156,11 +156,4 @@ if CONFIG.General.debug then
         end
     end)
 
-    Console:Register('AwardRibbonDebug', 'DEBUG: Awards a ribbon by ribbonKey[1] to self', function(args)
-        if #args == 1 then
-            NetEvents:SendLocal('AwardRibbonDebug', args[1])
-            print("Requesting ribbon " .. args[1] .. " award")
-        end
-    end)
-
 end
