@@ -85,6 +85,11 @@ function addPlayerToRankUpList(player)
     end)
 end
 
+--- Determines the vehicle category of the killer for vehicle-based ribbon awards.
+--- @param inflictor Player The player entity responsible for the kill.
+--- @param weapon string The weapon blueprint/asset path.
+--- @param isRoadKill boolean Whether the kill was a roadkill.
+--- @return string|nil The vehicle category name ("Air", "Transport", "Stationary", "Land") or nil if it was a weapon.
 local function GetKillerVehicleCategory(inflictor, weapon, isRoadKill)
     local vehicleName = ""
     if inflictor and inflictor.attachedControllable and inflictor.attachedControllable.data then
@@ -135,6 +140,10 @@ local function GetKillerVehicleCategory(inflictor, weapon, isRoadKill)
     return nil
 end
 
+--- Awards a ribbon to a player, increases their general XP, and sends client events.
+--- @param playerRankObject PlayerRank The player rank object containing stats and ribbons.
+--- @param ribbonKey string The configuration key of the ribbon to award.
+--- @return nil
 local function AwardRibbon(playerRankObject, ribbonKey)
     local player = playerRankObject.r_Player
     if not player then return end
@@ -174,6 +183,11 @@ local function AwardRibbon(playerRankObject, ribbonKey)
     print(string.format("Awarded ribbon %s to player %s", ribbonKey, player.name))
 end
 
+--- Evaluates the player's roundStats against the threshold requirements of a specific ribbon.
+--- Awards a ribbon if the requirements have been satisfied for the next incremental count.
+--- @param playerRankObj PlayerRank The player rank object containing roundStats.
+--- @param ribbonKey string The configuration key of the ribbon to check.
+--- @return nil
 local function CheckRibbonProgress(playerRankObj, ribbonKey)
     local stats = playerRankObj.roundStats
     local ribbon = RibbonConfig[ribbonKey]
@@ -239,6 +253,10 @@ local function CheckRibbonProgress(playerRankObj, ribbonKey)
     end
 end
 
+--- Processes incoming player score events (SIDs) and increments round stats for ribbons.
+--- @param playerRankObj PlayerRank The player rank object containing stats.
+--- @param sid string The VEXT game engine score event identifier.
+--- @return nil
 local function HandleScoringEventForRibbons(playerRankObj, sid)
     if not playerRankObj or not playerRankObj.roundStats or not sid then return end
     
@@ -301,6 +319,9 @@ local function HandleScoringEventForRibbons(playerRankObj, sid)
     end
 end
 
+--- Evaluates and awards all end-of-round awards (MVP 1/2/3, Ace Squad, game mode participation and win ribbons).
+--- @param winningTeam integer The ID of the team that won the round.
+--- @return nil
 local function AwardRoundEndRibbons(winningTeam)
     local players = PlayerManager:GetPlayers()
     if #players == 0 then return end

@@ -49,6 +49,9 @@ function LocalStorage:_initDB()
     end
 end
 
+--- Queries the player_rankings_table structure and automatically adds missing progression columns.
+--- Safe for empty databases and updates schemas without altering existing data.
+--- @return nil
 function LocalStorage:_patchDB()
     local columns = SQL:Query('PRAGMA table_info(player_rankings_table)')
     if columns == nil then

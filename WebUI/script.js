@@ -75,7 +75,17 @@
     const ribbonQueue = [];
     let isDisplaying = false;
 
-    // Expose showRibbon to global window object for Venice Unleashed VEXT Lua to call
+    /**
+     * Queues a ribbon award and starts processing the queue.
+     * Exposed to the global window object for VEXT Client Lua calls.
+     * @param {Object} data - Ribbon award payload.
+     * @param {string} data.key - Unique identifier of the ribbon configuration.
+     * @param {string} data.name - Display name of the ribbon.
+     * @param {string} data.desc - Unlock/award description.
+     * @param {number} data.xp - Experience points awarded.
+     * @param {number} [data.duration] - Display duration in milliseconds.
+     * @returns {void}
+     */
     window.showRibbon = function(data) {
         if (!data || !data.key) {
             console.warn("[WebUI] Received invalid ribbon data:", data);
@@ -85,6 +95,10 @@
         processQueue();
     };
 
+    /**
+     * Checks if a ribbon can be displayed and pops the next ribbon from the queue.
+     * @returns {void}
+     */
     function processQueue() {
         if (isDisplaying || ribbonQueue.length === 0) {
             return;
@@ -95,6 +109,12 @@
         displayRibbon(currentRibbon);
     }
 
+    /**
+     * Dynamically creates a ribbon card, triggers animations, plays sequential client sound,
+     * and schedules the card's destruction after the configured display duration.
+     * @param {Object} data - Ribbon configuration and display details.
+     * @returns {void}
+     */
     function displayRibbon(data) {
         const container = document.getElementById('ribbon-container');
         if (!container) {
