@@ -245,7 +245,11 @@ local function CheckRibbonProgress(playerRankObj, ribbonKey)
     end
 
     local alreadyEarned = stats.earnedRibbons[ribbonKey] or 0
-    local nextThreshold = (alreadyEarned + 1) * ribbon.reqCount
+    local reqCount = ribbon.reqCount
+    if CONFIG.General.debug then
+        reqCount = 1
+    end
+    local nextThreshold = (alreadyEarned + 1) * reqCount
     
     if currentCount >= nextThreshold then
         stats.earnedRibbons[ribbonKey] = alreadyEarned + 1
@@ -263,6 +267,11 @@ local function HandleScoringEventForRibbons(playerRankObj, sid)
     local lowerSid = string.lower(sid)
     local roundStats = playerRankObj.roundStats
 
+    if CONFIG.General.debug then
+        local pName = playerRankObj.r_Player and playerRankObj.r_Player.name or "Unknown"
+        print("[ScoreEvent] player: " .. pName .. ", SID: " .. lowerSid)
+    end
+
     if string.find(lowerSid, "heal") then
         roundStats.heals = roundStats.heals + 1
     elseif string.find(lowerSid, "revive") then
@@ -274,10 +283,10 @@ local function HandleScoringEventForRibbons(playerRankObj, sid)
     elseif string.find(lowerSid, "repair") then
         roundStats.repairs = roundStats.repairs + 1
         CheckRibbonProgress(playerRankObj, "Maintenance")
-    elseif string.find(lowerSid, "flag") and string.find(lowerSid, "capture") then
+    elseif (string.find(lowerSid, "flag") and string.find(lowerSid, "capture")) or string.find(lowerSid, "secured") then
         roundStats.flagCaptures = roundStats.flagCaptures + 1
         CheckRibbonProgress(playerRankObj, "FlagAttacker")
-    elseif string.find(lowerSid, "flag") and string.find(lowerSid, "defend") then
+    elseif (string.find(lowerSid, "flag") or string.find(lowerSid, "conquest") or string.find(lowerSid, "domination")) and string.find(lowerSid, "defend") then
         roundStats.flagDefends = roundStats.flagDefends + 1
         CheckRibbonProgress(playerRankObj, "FlagDefender")
     elseif string.find(lowerSid, "mcom") and string.find(lowerSid, "destroy") then
@@ -310,7 +319,7 @@ local function HandleScoringEventForRibbons(playerRankObj, sid)
     elseif string.find(lowerSid, "disable") then
         roundStats.disables = roundStats.disables + 1
         CheckRibbonProgress(playerRankObj, "DisableVehicle")
-    elseif string.find(lowerSid, "destroy") and string.find(lowerSid, "vehicle") then
+    elseif string.find(lowerSid, "vehicle") and (string.find(lowerSid, "destroy") or string.find(lowerSid, "kill")) then
         roundStats.destroys = roundStats.destroys + 1
         CheckRibbonProgress(playerRankObj, "AntiVehicle")
     elseif string.find(lowerSid, "destroy") and string.find(lowerSid, "explosive") then
@@ -823,7 +832,19 @@ Events:Subscribe('Player:Score', function(player, scoringTypeData, score)
         
         local cPlayer = currentRankupPlayers[guid]
         if cPlayer and scoringTypeData then
-            HandleScoringEventForRibbons(cPlayer, scoringTypeData.descriptionSid)
+            -- Cast the DataContainer to ScoringTypeData to access the descriptionSid property
+            local success, scoringData = pcall(ScoringTypeData, scoringTypeData)
+            if success and scoringData then
+                if CONFIG.General.debug then
+                    local pName = player.name or "Unknown"
+                    print("[Player:Score] player: " .. pName .. ", score: " .. tostring(score) .. ", SID: " .. tostring(scoringData.descriptionSid))
+                end
+                HandleScoringEventForRibbons(cPlayer, scoringData.descriptionSid)
+            else
+                pcall(function()
+                    HandleScoringEventForRibbons(cPlayer, scoringTypeData.descriptionSid)
+                end)
+            end
         end
     end
     
@@ -880,7 +901,15 @@ Events:Subscribe('Player:Killed', function(player, inflictor, position, weapon, 
                 
                 -- Track streak / Combat Efficiency
                 killer.roundStats.streak = killer.roundStats.streak + 1
-                if killer.roundStats.streak >= 8 and (killer.roundStats.streak - 8) % 3 == 0 then
+                local isStreakBonus = false
+                if CONFIG.General.debug then
+                    isStreakBonus = true
+                else
+                    if killer.roundStats.streak >= 8 and (killer.roundStats.streak - 8) % 3 == 0 then
+                        isStreakBonus = true
+                    end
+                end
+                if isStreakBonus then
                     killer.roundStats.streakBonuses = killer.roundStats.streakBonuses + 1
                     CheckRibbonProgress(killer, "CombatEfficiency")
                 end

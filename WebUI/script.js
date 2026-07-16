@@ -164,8 +164,8 @@
             card.classList.remove('glitch-active');
         }, 2200);
 
-        // Keep displayed for the configured duration (default to 4.5s)
-        const displayDuration = (data.duration && data.duration > 100) ? data.duration : 4500;
+        // Keep displayed for the configured duration (default to 2.5s)
+        const displayDuration = (data.duration && data.duration > 100) ? data.duration : 2500;
         const transitionDuration = 400; // time in ms for transition in CSS (0.4s)
 
         setTimeout(() => {

@@ -30,7 +30,7 @@ CONFIG = {
         -- Turn unlock notifications on or off
         enabled = true,
         -- How long (in seconds) the notification should be visible on screen
-        duration = 10,
+        duration = 2.5,
         -- Notification messages to print on screen, based on unlock type
         messages = {
             -- Message must have `%s` for Class name, followed by `%i` for new level, followed by `%s` for gear name, in that order
