@@ -304,7 +304,7 @@ local function HandleScoringEventForRibbons(playerRankObj, sid)
     elseif string.find(lowerSid, "avenger") then
         roundStats.avengerKills = roundStats.avengerKills + 1
         CheckRibbonProgress(playerRankObj, "Avenger")
-    elseif string.find(lowerSid, "savior") then
+    elseif string.find(lowerSid, "savior") or string.find(lowerSid, "saviour") then
         roundStats.saviorKills = roundStats.saviorKills + 1
         CheckRibbonProgress(playerRankObj, "Savior")
     elseif string.find(lowerSid, "nemesis") then
