@@ -55,6 +55,10 @@ CONFIG = {
                 path = "Sound/UI/Awards/UI_Award_RankUp",
                 volumeMult = 3.0,
             },
+            ribbon = {
+                path = "Sound/UI/Awards/UI_Award_Unlock",
+                volumeMult = 2.5,
+            },
         },
     },
 }
