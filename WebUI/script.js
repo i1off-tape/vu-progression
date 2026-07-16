@@ -144,11 +144,11 @@
 
         container.appendChild(card);
 
-        // Force a layout reflow so transitions trigger correctly
-        void card.offsetWidth;
-
-        // Slide in
-        card.classList.add('show');
+        // Use a short setTimeout to yield execution, guaranteeing that the browser
+        // registers the initial states (opacity 0, scale 0.15) before transitioning.
+        setTimeout(() => {
+            card.classList.add('show');
+        }, 50);
 
         // Play sound via client Lua
         if (typeof WebUI !== 'undefined') {
