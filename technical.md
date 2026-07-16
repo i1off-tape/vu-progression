@@ -4,19 +4,28 @@ This document provides a technical modding guide for Venice Unleashed (VU) devel
 
 ---
 
-## 🛠️ UI Compilation
+## 🛠️ UI Compilation & Debugging
 Venice Unleashed UI uses standard HTML/CSS/JS compiled into a single virtual container archive file named `ui.vuic` in the mod's root folder.
 
-To compile changes in the `WebUI/` folder:
-1. Install the Venice Unleashed UI compiler globally (requires Node.js):
+### Compiling WebUI:
+To compile changes in the `WebUI/` folder into `ui.vuic`:
+1. Use the official Venice Unleashed UI Compiler tool (`vuicc.exe`), which is distributed with the Venice Unleashed developer tools.
+2. Run the compiler from your command prompt, passing the source folder and the destination file:
    ```bash
-   npm install -g @veniceunleashed/vuic
+   vuicc.exe WebUI ui.vuic
    ```
-2. Run the compiler pointing to the `WebUI` source folder and output file:
+
+### Debugging WebUI in Real-Time:
+To debug or live-inspect the WebUI elements:
+1. Start the Venice Unleashed client with the `-dwebui` launch argument:
    ```bash
-   vuic ./WebUI ./ui.vuic
+   vu.exe -dwebui
    ```
-3. Alternatively, compile dynamically using the developer server configuration inside your server launch parameters.
+2. While the game is running and you have joined a server, open any Chromium-based browser (like Chrome or Edge) and navigate to:
+   ```
+   http://localhost:8884
+   ```
+3. Select your mod from the list of loaded frames to open standard Chromium Developer Tools (inspect elements, view console logs, debug JS).
 
 ---
 
