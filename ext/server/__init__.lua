@@ -821,6 +821,16 @@ function ChatCommand(player, recipientMask, message)
             ChatManager:SendMessage("Error: Ribbon key " .. ribbonKey .. " not found in configuration.", player)
         end
 
+    -- !testribbons command (Only in debug mode to test queue output)
+    elseif CONFIG.General.debug and string.lower(message) == "!testribbons" then
+        local testKeys = { "MVP", "AceSquad", "AirWarfare", "Melee", "CombatEfficiency" }
+        for _, rKey in ipairs(testKeys) do
+            if RibbonConfig[rKey] then
+                AwardRibbon(cPlayer, rKey)
+            end
+        end
+        ChatManager:SendMessage("Debug: Awarded 5 test ribbons (MVP, AceSquad, AirWarfare, Melee, CombatEfficiency).", player)
+
     end
 end
 

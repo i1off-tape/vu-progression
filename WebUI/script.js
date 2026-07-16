@@ -144,16 +144,15 @@
 
         container.appendChild(card);
 
-        // Force a layout reflow so transitions trigger correctly
-        void card.offsetWidth;
-
-        // Slide in
-        card.classList.add('show');
-
-        // Play sound via client Lua
-        if (typeof WebUI !== 'undefined') {
-            WebUI.Call('DispatchEventLocal', 'PlayRibbonSound');
-        }
+        // Use a short setTimeout to yield execution, guaranteeing that the browser
+        // registers the initial states (opacity 0, scale 0.15) before transitioning.
+        setTimeout(() => {
+            card.classList.add('show');
+            // Play sound via client Lua
+            if (typeof WebUI !== 'undefined') {
+                WebUI.Call('DispatchEventLocal', 'PlayRibbonSound');
+            }
+        }, 50);
 
         // Trigger glitch effects (RGB split, blocks, laser scan) only in the middle (from 0.5s to 2.2s)
         let glitchStartTimeout = setTimeout(() => {

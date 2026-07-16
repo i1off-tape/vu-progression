@@ -78,3 +78,80 @@ When a round completes, the server calculates:
 
 ## 💾 Storage & Networking
 All progress is saved in SQLite database (`ribbon_progression`). Global API networking (`NetStorage.lua`) is untouched, guaranteeing backward compatibility. Data is saved automatically on map reload or disconnect.
+
+---
+
+## 🎗️ Complete Ribbon List Reference
+Use the **Ribbon Key** column to test specific ribbons with the debug chat command:
+`!awardribbon <RibbonKey>`
+
+### 1. Combat & Weapons
+| Ribbon Key | Pretty Name | Description (Per Round) | XP Reward |
+| :--- | :--- | :--- | :--- |
+| `AssaultRifle` | Assault Rifle Ribbon | Kill 7 enemies with Assault Rifles | 200 |
+| `LMG` | Light Machine Gun Ribbon | Kill 7 enemies with Light Machine Guns | 200 |
+| `Carbine` | Carbine Ribbon | Kill 7 enemies with Carbines | 200 |
+| `Handgun` | Handgun Ribbon | Kill 4 enemies with Handguns | 200 |
+| `SniperRifle` | Sniper Rifle Ribbon | Kill 7 enemies with Sniper Rifles | 200 |
+| `PDW` | PDW Ribbon | Kill 7 enemies with Personal Defense Weapons | 200 |
+| `Shotgun` | Shotgun Ribbon | Kill 7 enemies with Shotguns | 200 |
+| `Melee` | Melee Ribbon | Kill 4 enemies with Melee Weapons | 200 |
+| `Accuracy` | Accuracy Ribbon | Get 5 Headshot Kills | 200 |
+| `CombatEfficiency` | Combat Efficiency Ribbon | Get 3 Streak Bonuses | 500 |
+
+### 2. Teamplay & Support
+| Ribbon Key | Pretty Name | Description (Per Round) | XP Reward |
+| :--- | :--- | :--- | :--- |
+| `Resupply` | Resupply Efficiency Ribbon | Perform 7 Resupplies | 200 |
+| `Surveillance` | Surveillance Efficiency Ribbon | Get 5 Motion Sensor Assists | 200 |
+| `Medical` | Medical Efficiency Ribbon | Perform 5 Revives | 200 |
+| `Maintenance` | Maintenance Efficiency Ribbon | Perform 7 Repairs | 200 |
+| `SquadWipe` | Squad Wipe Ribbon | Get 2 Squad Wipe Bonuses | 200 |
+| `SquadSpawn` | Squad Spawn Ribbon | Get 7 Squad Spawn Bonuses | 200 |
+| `Suppression` | Suppression Ribbon | Get 4 Suppression Assists | 200 |
+| `Avenger` | Avenger Ribbon | Get 2 Avenger Kills | 200 |
+| `Savior` | Savior Ribbon | Get 2 Savior Kills | 200 |
+| `Nemesis` | Nemesis Ribbon | Get 2 Nemesis Kills | 200 |
+
+### 3. Objectives & Tactics
+| Ribbon Key | Pretty Name | Description (Per Round) | XP Reward |
+| :--- | :--- | :--- | :--- |
+| `FlagAttacker` | Flag Attacker Ribbon | Get 4 Flag Captures | 200 |
+| `FlagDefender` | Flag Defender Ribbon | Get 5 Flag Defends | 200 |
+| `McomAttacker` | M-COM Attacker Ribbon | Destroy 2 M-COM stations | 200 |
+| `McomDefender` | M-COM Defender Ribbon | Defend 2 M-COM stations | 200 |
+| `AntiExplosives` | Anti Explosives Ribbon | Destroy 3 enemy Explosives | 200 |
+
+### 4. Vehicle Warfare
+| Ribbon Key | Pretty Name | Description (Per Round) | XP Reward |
+| :--- | :--- | :--- | :--- |
+| `DisableVehicle` | Disable Vehicle Ribbon | Disable 4 enemy Vehicles | 200 |
+| `AntiVehicle` | Anti Vehicle Ribbon | Destroy 3 enemy Vehicles | 200 |
+| `AirWarfare` | Air Warfare Ribbon | Kill 5 enemies with Air Vehicles | 200 |
+| `ArmoredWarfare` | Armored Warfare Ribbon | Kill 7 enemies with Land Vehicles | 200 |
+| `TransportWarfare` | Transport Warfare Ribbon | Kill 4 enemies with Transport Vehicles | 200 |
+| `Stationary` | Stationary Emplacement Ribbon | Kill 2 enemies with Emplaced Weapons | 200 |
+
+### 5. Match MVP & Squad Bonuses
+| Ribbon Key | Pretty Name | Description (End of Round) | XP Reward |
+| :--- | :--- | :--- | :--- |
+| `MVP` | MVP Ribbon | Be the best Player of the round | 500 |
+| `MVP2` | MVP 2 Ribbon | Be the second best Player of the round | 400 |
+| `MVP3` | MVP 3 Ribbon | Be the third best Player of the round | 300 |
+| `AceSquad` | Ace Squad Ribbon | Be part of the best Squad of the round | 500 |
+
+### 6. Game Mode Completion & Victory
+| Ribbon Key (Finish) | Ribbon Key (Winner) | Game Mode Name | XP (Finish/Win) |
+| :--- | :--- | :--- | :--- |
+| `Conquest` | `ConquestWinner` | Conquest | 200 / 500 |
+| `Rush` | `RushWinner` | Rush | 200 / 500 |
+| `TeamDeathmatch` | `TDMWinner` | Team Deathmatch (TDM) | 200 / 500 |
+| `SquadRush` | `SquadRushWinner` | Squad Rush | 200 / 500 |
+| `SquadDeathmatch` | `SquadDeathmatchWinner` | Squad Deathmatch (SQDM) | 200 / 500 |
+| `TDMCQ` | `TDMCQWinner` | TDM Close Quarters (CQ) | 200 / 500 |
+| `TankSuperiority` | `TankSuperiorityWinner` | Tank Superiority | 200 / 500 |
+| `Scavenger` | `ScavengerWinner` | Scavenger | 200 / 500 |
+| `Domination` | `DominationWinner` | Conquest Domination | 200 / 500 |
+| `GunMaster` | `GunMasterWinner` | Gun Master | 200 / 500 |
+| `CaptureTheFlag` | `CaptureTheFlagWinner` | Capture The Flag (CTF) | 200 / 500 |
+| `AirSuperiority` | `AirSuperiorityWinner` | Air Superiority | 200 / 500 |
