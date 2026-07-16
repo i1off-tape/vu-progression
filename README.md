@@ -84,6 +84,9 @@ Want to contribute? Here’s how:
 
 The mod is written in [VEXT (VeniceEXT)](https://docs.veniceunleashed.net/vext/) scripting, primarily in LUA.
 
+For detailed technical guides on console commands, VEXT hooks, downcasting Frostbite classes in Lua, database layout, and UI compilation, please see [technical.md](technical.md).
+For a detailed guide on the Ribbon system architecture, please see [RIBBONS.md](RIBBONS.md).
+
 ---
 
 ## 🚧 Roadmap
