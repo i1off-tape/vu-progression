@@ -289,10 +289,10 @@ local function HandleScoringEventForRibbons(playerRankObj, sid)
     elseif (string.find(lowerSid, "flag") or string.find(lowerSid, "conquest") or string.find(lowerSid, "domination")) and string.find(lowerSid, "defend") then
         roundStats.flagDefends = roundStats.flagDefends + 1
         CheckRibbonProgress(playerRankObj, "FlagDefender")
-    elseif string.find(lowerSid, "mcom") and string.find(lowerSid, "destroy") then
+    elseif (string.find(lowerSid, "mcom") or string.find(lowerSid, "crate")) and string.find(lowerSid, "destroy") then
         roundStats.mcomDestroys = roundStats.mcomDestroys + 1
         CheckRibbonProgress(playerRankObj, "McomAttacker")
-    elseif string.find(lowerSid, "mcom") and string.find(lowerSid, "defend") then
+    elseif (string.find(lowerSid, "mcom") or string.find(lowerSid, "crate")) and string.find(lowerSid, "defend") then
         roundStats.mcomDefends = roundStats.mcomDefends + 1
         CheckRibbonProgress(playerRankObj, "McomDefender")
     elseif string.find(lowerSid, "tugs") or string.find(lowerSid, "motion") or string.find(lowerSid, "sensor") or string.find(lowerSid, "surveillance") then

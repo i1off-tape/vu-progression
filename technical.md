@@ -35,6 +35,10 @@ In the Venice Unleashed Lua engine (VEXT), parameters passed to events or return
        end
    end)
    ```
+   > [!NOTE]
+   > * **Savior spelling nuance:** The game engine uses British spelling for the Savior Kill event SID: `ID_SCORE_SAVIOUR`, while the ribbon config might refer to it as `Savior`. Match both.
+   > * **M-COM naming nuance:** In Frostbite engine files, M-COM stations are referred to as "crates". The corresponding SIDs are `ID_SCORE_CRATE_DESTROY` and `ID_SCORE_CRATE_DEFEND`.
+
 
 2. **Vehicle Entity Data (Inside Vehicle)**:
    Retrieve vehicle subclass details (such as the vehicle category `controllableType`) from the attached player controllable:
