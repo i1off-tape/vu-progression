@@ -781,6 +781,16 @@ function ChatCommand(player, recipientMask, message)
             )
         end
 
+    -- !awardribbon command (Only in debug mode)
+    elseif CONFIG.General.debug and string.lower(message):sub(1, 12) == "!awardribbon" then
+        local ribbonKey = message:sub(14)
+        if RibbonConfig[ribbonKey] then
+            AwardRibbon(cPlayer, ribbonKey)
+            ChatManager:SendMessage("Debug: Awarded ribbon " .. ribbonKey .. " to you.", player)
+        else
+            ChatManager:SendMessage("Error: Ribbon key " .. ribbonKey .. " not found in configuration.", player)
+        end
+
     end
 end
 

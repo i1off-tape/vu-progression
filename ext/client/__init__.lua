@@ -123,7 +123,8 @@ NetEvents:Subscribe('OnRibbonAwarded', function(ribbonKey)
                 key = ribbonKey,
                 name = ribbon.prettyName,
                 desc = ribbon.description,
-                xp = ribbon.xpReward
+                xp = ribbon.xpReward,
+                duration = CONFIG.UnlockNotifications.duration * 1000
             })
             WebUI:ExecuteJS('if (window.showRibbon) { window.showRibbon(' .. jsonStr .. '); }')
         end
